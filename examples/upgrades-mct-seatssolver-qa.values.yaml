@@ -1,0 +1,111 @@
+replicaCount: 1
+
+applicationci: bbp
+
+image:
+  repository: artifactorycloud.ual.com/v-docker/bbp/seatssolver
+  pullPolicy: IfNotPresent
+  tag: 1.14.56
+  
+tracing:
+  datadog:
+    env: qa
+  
+env: 
+  asp_environment: CLOUDQA
+  service_name: upgrades-mct-seatssolver-qa
+  qualysid: "387313742"
+  appname: "upgrades-mct-seatssolver"
+  defectdojoid: "527"
+  
+imagePullSecrets: [{ name: artifactorycloud }]
+nameOverride: "upgrades-mct-seatssolver-qa"
+fullnameOverride: "upgrades-mct-seatssolver-qa"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: NodePort
+  port: 80
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:313566431123:certificate/1fbb39f6-88ed-45d0-bd6d-d0bb50c6f5e7
+    alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS13-1-2-2021-06
+    external-dns.alpha.kubernetes.io/hostname: upgrades-seatssolver-01-east1.qa-ma.bbp.aws.ual.com
+    external-dns.alpha.kubernetes.io/ingress-hostname-source: annotation-only
+    # alb.ingress.kubernetes.io/manage-backend-security-group-rules: "true"
+    # alb.ingress.kubernetes.io/security-groups: sg-04748f70cfeecd215,sg-0e1443cc0c7dcffed
+    alb.ingress.kubernetes.io/inbound-cidrs: 10.0.0.0/8, 100.64.0.0/16
+    alb.ingress.kubernetes.io/load-balancer-attributes: routing.http.drop_invalid_header_fields.enabled=true,access_logs.s3.enabled=true,access_logs.s3.bucket=313566431123-elbloggingbucketnew-us-east-1,access_logs.s3.prefix=elb-logs
+  hosts:
+    - host: upgrades-seatssolver-01-east1.qa-ma.bbp.aws.ual.com
+      paths: {/*}
+    - host: upgrades-seatssolver.qa-ma.bbp.aws.ual.com
+      paths: {/*}
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 15
+  timeoutSeconds: 60
+  periodSeconds: 20
+  successThreshold: 1
+  failureThreshold: 6
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: http
+  initialDelaySeconds: 20
+  timeoutSeconds: 60
+  periodSeconds: 20
+  successThreshold: 1
+  failureThreshold: 6
+  
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  limits:
+    cpu: 2000m
+    memory: 1024Mi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 6
+  averageUtilization: 70
+
+#nodeSelector: 
+  #applicationci: bbp
+
+tolerations: []
+
+affinity: {}

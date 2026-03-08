@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: automation
+      POSTGRES_USER: automation
+      POSTGRES_PASSWORD: automation
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U automation -d automation"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./apps/api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_ENV: production
+      DATABASE_URL: postgresql+psycopg://automation:automation@db:5432/automation
+      AUTH_MODE: ${AUTH_MODE:-dev}
+      JWT_SECRET: ${JWT_SECRET:-}
+      JWT_ALGORITHM: HS256
+      STATIC_TOKENS: ${STATIC_TOKENS:-admin-token:admin,editor-token:editor,viewer-token:viewer}
+      RATE_LIMIT_PER_MINUTE: ${RATE_LIMIT_PER_MINUTE:-120}
+      GITHUB_API_URL: https://api.github.com
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      GITHUB_ORGS: ${GITHUB_ORGS:-}
+      MANAGED_REPOS: ${MANAGED_REPOS:-}
+      REPO_REFRESH_SECONDS: ${REPO_REFRESH_SECONDS:-300}
+      DRY_RUN_DEFAULT: ${DRY_RUN_DEFAULT:-true}
+      BRANCH_PREFIX: automation
+      COMMIT_MESSAGE_TEMPLATE: chore(automation): update {key_path} in {environment_file}
+      REQUIRED_REVIEWERS: ${REQUIRED_REVIEWERS:-}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000}
+    ports:
+      - "8000:8000"
+
+  web:
+    build:
+      context: ./apps/web
+      args:
+        NEXT_PUBLIC_API_BASE: ${NEXT_PUBLIC_API_BASE:-http://localhost:8000}
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
