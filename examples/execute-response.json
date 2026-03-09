@@ -1,0 +1,11 @@
+{
+  "results": [
+    {
+      "application": "dummy-app-01",
+      "repo": "test-org/dummy-app-01",
+      "branch": "automation/demo/dummy-app-01/20260309000000-ab12cd",
+      "pull_request_url": "https://github.com/test-org/dummy-app-01/pull/101",
+      "status": "success"
+    }
+  ]
+}

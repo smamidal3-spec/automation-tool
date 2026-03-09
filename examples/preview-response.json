@@ -1,0 +1,12 @@
+{
+  "allowed": true,
+  "diffs": [
+    {
+      "application": "dummy-app-01",
+      "environment_file": "values.dev.yaml",
+      "repo": "test-org/dummy-app-01",
+      "changed": true,
+      "diff": "--- before.yaml\n+++ after.yaml\n@@ -1 +1 @@\n-replicaCount: 2\n+replicaCount: 5\n"
+    }
+  ]
+}

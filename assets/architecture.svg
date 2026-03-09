@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="560" viewBox="0 0 980 560">
+  <style>
+    .box { fill: #f8fafc; stroke: #0f172a; stroke-width: 2; }
+    .title { font: 700 20px Arial, sans-serif; fill: #0f172a; }
+    .text { font: 14px Arial, sans-serif; fill: #0f172a; }
+    .arrow { stroke: #0f172a; stroke-width: 2; marker-end: url(#a); }
+  </style>
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#0f172a"/>
+    </marker>
+  </defs>
+
+  <text x="24" y="34" class="title">DevOps YAML Automation Platform - Architecture</text>
+
+  <rect x="40" y="100" width="220" height="130" class="box"/>
+  <text x="58" y="132" class="title">Web UI (Next.js)</text>
+  <text x="58" y="158" class="text">- Preview / Execute forms</text>
+  <text x="58" y="180" class="text">- Config + Audit views</text>
+  <text x="58" y="202" class="text">- Auth token context</text>
+
+  <rect x="360" y="80" width="280" height="180" class="box"/>
+  <text x="380" y="112" class="title">FastAPI Backend</text>
+  <text x="380" y="138" class="text">- RBAC + Rate limiting</text>
+  <text x="380" y="160" class="text">- Key policy validation</text>
+  <text x="380" y="182" class="text">- YAML patch + diff generation</text>
+  <text x="380" y="204" class="text">- Parallel target execution</text>
+  <text x="380" y="226" class="text">- Audit persistence</text>
+
+  <rect x="740" y="100" width="200" height="130" class="box"/>
+  <text x="760" y="132" class="title">GitHub API</text>
+  <text x="760" y="158" class="text">- Fetch file</text>
+  <text x="760" y="180" class="text">- Create branch + commit</text>
+  <text x="760" y="202" class="text">- Open pull request</text>
+
+  <rect x="360" y="320" width="280" height="150" class="box"/>
+  <text x="380" y="352" class="title">Data + Tests</text>
+  <text x="380" y="378" class="text">- SQLite/PostgreSQL audit logs</text>
+  <text x="380" y="400" class="text">- tests/test_policy.py</text>
+  <text x="380" y="422" class="text">- tests/test_yaml_engine.py</text>
+
+  <line x1="260" y1="165" x2="360" y2="165" class="arrow"/>
+  <line x1="640" y1="165" x2="740" y2="165" class="arrow"/>
+  <line x1="500" y1="260" x2="500" y2="320" class="arrow"/>
+</svg>
